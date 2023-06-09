@@ -10,3 +10,4 @@ path = "src/main.rs"
 [dependencies]
 sentry = "0.31.0"
 protobuf = "3.2.0"
+tokio = { version = "1.28.0", features = ["macros", "rt-multi-thread"] }
