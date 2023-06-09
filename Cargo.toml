@@ -1,0 +1,12 @@
+[package]
+name = "notification"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "notification"
+path = "src/main.rs"
+
+[dependencies]
+sentry = "0.31.0"
+protobuf = "3.2.0"
