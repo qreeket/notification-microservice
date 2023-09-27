@@ -6,4 +6,8 @@ update-protos-submodule:
 	@echo "initializing protos submodule..." && \
 	git submodule update --init --recursive --remote
 
+gen-protos:
+	@echo "generating protos for microservices..." && \
+	chmod +x gen-protos.sh && ./gen-protos.sh
+
 .PHONY: get-protos-submodule update-protos-submodule

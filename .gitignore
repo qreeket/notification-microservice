@@ -22,3 +22,6 @@ fly.toml
 **/*.lock
 
 .DS_Store
+
+# firebase service key
+**/*-service-key.json
