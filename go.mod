@@ -6,6 +6,8 @@ require (
 	firebase.google.com/go/v4 v4.12.1
 	github.com/joho/godotenv v1.5.1
 	google.golang.org/api v0.114.0
+	google.golang.org/grpc v1.53.0
+	google.golang.org/protobuf v1.30.0
 )
 
 require (
@@ -35,6 +37,4 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/appengine/v2 v2.0.2 // indirect
 	google.golang.org/genproto v0.0.0-20230320184635-7606e756e683 // indirect
-	google.golang.org/grpc v1.53.0 // indirect
-	google.golang.org/protobuf v1.30.0 // indirect
 )

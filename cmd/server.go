@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"firebase.google.com/go/v4/messaging"
 	"github.com/joho/godotenv"
 	"github.com/qcodelabsllc/qreeket/notification/config"
+	"github.com/qcodelabsllc/qreeket/notification/network"
 	"log"
 )
 
@@ -20,17 +20,6 @@ func main() {
 		log.Fatalf("unable to initialize firebase: %+v\n", err)
 	}
 
-	// test the messaging client
-	sendResult, err := config.FirebaseMessaging.Send(context.Background(), &messaging.Message{
-		Notification: &messaging.Notification{
-			Title: "Test",
-			Body:  "This is a test notification",
-		},
-		Topic: "test",
-	})
-	if err != nil {
-		log.Fatalf("unable to send message: %+v\n", err)
-	}
-
-	log.Printf("message sent: %+v\n", sendResult)
+	// initialize the grpc server
+	network.InitServer()
 }
