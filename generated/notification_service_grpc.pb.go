@@ -11,8 +11,6 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	wrapperspb "google.golang.org/protobuf/types/known/wrapperspb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -30,9 +28,9 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServiceClient interface {
-	SendNotification(ctx context.Context, in *SendNotificationRequest, opts ...grpc.CallOption) (*wrapperspb.StringValue, error)
-	RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	UnregisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SendNotification(ctx context.Context, in *SendNotificationRequest, opts ...grpc.CallOption) (*StringValue, error)
+	RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*Empty, error)
+	UnregisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*Empty, error)
 }
 
 type notificationServiceClient struct {
@@ -43,8 +41,8 @@ func NewNotificationServiceClient(cc grpc.ClientConnInterface) NotificationServi
 	return &notificationServiceClient{cc}
 }
 
-func (c *notificationServiceClient) SendNotification(ctx context.Context, in *SendNotificationRequest, opts ...grpc.CallOption) (*wrapperspb.StringValue, error) {
-	out := new(wrapperspb.StringValue)
+func (c *notificationServiceClient) SendNotification(ctx context.Context, in *SendNotificationRequest, opts ...grpc.CallOption) (*StringValue, error) {
+	out := new(StringValue)
 	err := c.cc.Invoke(ctx, NotificationService_SendNotification_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -52,8 +50,8 @@ func (c *notificationServiceClient) SendNotification(ctx context.Context, in *Se
 	return out, nil
 }
 
-func (c *notificationServiceClient) RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *notificationServiceClient) RegisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, NotificationService_RegisterDevice_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -61,8 +59,8 @@ func (c *notificationServiceClient) RegisterDevice(ctx context.Context, in *Regi
 	return out, nil
 }
 
-func (c *notificationServiceClient) UnregisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
+func (c *notificationServiceClient) UnregisterDevice(ctx context.Context, in *RegisterDeviceRequest, opts ...grpc.CallOption) (*Empty, error) {
+	out := new(Empty)
 	err := c.cc.Invoke(ctx, NotificationService_UnregisterDevice_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -74,9 +72,9 @@ func (c *notificationServiceClient) UnregisterDevice(ctx context.Context, in *Re
 // All implementations must embed UnimplementedNotificationServiceServer
 // for forward compatibility
 type NotificationServiceServer interface {
-	SendNotification(context.Context, *SendNotificationRequest) (*wrapperspb.StringValue, error)
-	RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error)
-	UnregisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error)
+	SendNotification(context.Context, *SendNotificationRequest) (*StringValue, error)
+	RegisterDevice(context.Context, *RegisterDeviceRequest) (*Empty, error)
+	UnregisterDevice(context.Context, *RegisterDeviceRequest) (*Empty, error)
 	mustEmbedUnimplementedNotificationServiceServer()
 }
 
@@ -84,13 +82,13 @@ type NotificationServiceServer interface {
 type UnimplementedNotificationServiceServer struct {
 }
 
-func (UnimplementedNotificationServiceServer) SendNotification(context.Context, *SendNotificationRequest) (*wrapperspb.StringValue, error) {
+func (UnimplementedNotificationServiceServer) SendNotification(context.Context, *SendNotificationRequest) (*StringValue, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendNotification not implemented")
 }
-func (UnimplementedNotificationServiceServer) RegisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error) {
+func (UnimplementedNotificationServiceServer) RegisterDevice(context.Context, *RegisterDeviceRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RegisterDevice not implemented")
 }
-func (UnimplementedNotificationServiceServer) UnregisterDevice(context.Context, *RegisterDeviceRequest) (*emptypb.Empty, error) {
+func (UnimplementedNotificationServiceServer) UnregisterDevice(context.Context, *RegisterDeviceRequest) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UnregisterDevice not implemented")
 }
 func (UnimplementedNotificationServiceServer) mustEmbedUnimplementedNotificationServiceServer() {}
