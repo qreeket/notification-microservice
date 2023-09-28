@@ -1,6 +1,6 @@
 module github.com/qcodelabsllc/qreeket/notification
 
-go 1.21.1
+go 1.20
 
 require (
 	firebase.google.com/go/v4 v4.12.1

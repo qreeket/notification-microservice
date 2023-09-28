@@ -7,8 +7,6 @@ import (
 	pb "github.com/qcodelabsllc/qreeket/notification/generated"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/emptypb"
-	"google.golang.org/protobuf/types/known/wrapperspb"
 	"log"
 )
 
@@ -21,30 +19,30 @@ func NewQreeketNotificationServer(messagingClient *messaging.Client) *QreeketNot
 	return &QreeketNotificationServer{messagingClient: messagingClient}
 }
 
-func (q *QreeketNotificationServer) SendNotification(ctx context.Context, req *pb.SendNotificationRequest) (*wrapperspb.StringValue, error) {
+func (q *QreeketNotificationServer) SendNotification(ctx context.Context, req *pb.SendNotificationRequest) (*pb.StringValue, error) {
 	if len(req.GetTitle()) == 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "notification title is required")
 	}
-	
+
 	if len(req.GetBody()) == 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "notification body is required")
 	}
-	
+
 	if len(req.GetTopic()) > 0 && len(req.GetToken()) > 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "notification topic and token cannot be used at the same time")
 	}
-	
+
 	// message data
 	msgData := map[string]string{
 		"click_action": "FLUTTER_NOTIFICATION_CLICK",
 		"sound":        "default",
 		"channel_id":   getChannelIdFromNotificationType(req.GetChannelType()),
 	}
-	
+
 	for k, v := range req.GetData() {
 		msgData[k] = v
 	}
-	
+
 	// create payload
 	payload := &messaging.Message{
 		Notification: &messaging.Notification{
@@ -53,49 +51,49 @@ func (q *QreeketNotificationServer) SendNotification(ctx context.Context, req *p
 		},
 		Data: msgData,
 	}
-	
+
 	if len(req.GetToken()) > 0 {
 		payload.Token = req.GetToken()
 	}
-	
+
 	if len(req.GetTopic()) > 0 {
 		payload.Topic = req.GetTopic()
 	}
-	
+
 	// test the messaging client
 	sendResult, err := config.FirebaseMessaging.Send(ctx, payload)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "unable to send notification: %+v", err)
 	}
-	
+
 	log.Printf("message sent: %+v\n", sendResult)
-	
-	return &wrapperspb.StringValue{Value: sendResult}, nil
+
+	return &pb.StringValue{Value: sendResult}, nil
 }
 
-func (q *QreeketNotificationServer) RegisterDevice(ctx context.Context, req *pb.RegisterDeviceRequest) (*emptypb.Empty, error) {
+func (q *QreeketNotificationServer) RegisterDevice(ctx context.Context, req *pb.RegisterDeviceRequest) (*pb.Empty, error) {
 	if len(req.GetToken()) == 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "messaging token is required")
 	}
-	
+
 	if len(req.GetTopic()) == 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "topic is required")
 	}
-	
+
 	if len(req.GetToken()) > 0 && len(req.GetTopic()) > 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "token and topic cannot be used at the same time")
 	}
-	
+
 	if len(req.GetTopic()) > 0 {
 		// subscribe the device to the topic
 		response, err := config.FirebaseMessaging.SubscribeToTopic(ctx, []string{req.GetToken()}, req.GetTopic())
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "unable to subscribe to topic: %+v", err)
 		}
-		
+
 		log.Printf("subscribed to topic: %+v\n", response.SuccessCount)
 	}
-	
+
 	if len(req.GetToken()) > 0 {
 		// subscribe the device to the topic
 		response, err := config.FirebaseMessaging.Send(ctx, &messaging.Message{
@@ -113,38 +111,38 @@ func (q *QreeketNotificationServer) RegisterDevice(ctx context.Context, req *pb.
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "unable to send notification: %+v", err)
 		}
-		
+
 		log.Printf("registered device for notifications: %+v\n", response)
 	}
-	
-	return &emptypb.Empty{}, nil
+
+	return &pb.Empty{}, nil
 }
 
-func (q *QreeketNotificationServer) UnregisterDevice(ctx context.Context, req *pb.RegisterDeviceRequest) (*emptypb.Empty, error) {
+func (q *QreeketNotificationServer) UnregisterDevice(ctx context.Context, req *pb.RegisterDeviceRequest) (*pb.Empty, error) {
 	if len(req.GetToken()) == 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "messaging token is required")
 	}
-	
+
 	if len(req.GetTopic()) == 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "topic is required")
 	}
-	
+
 	if len(req.GetToken()) > 0 && len(req.GetTopic()) > 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "token and topic cannot be used at the same time")
 	}
-	
+
 	if len(req.GetTopic()) > 0 {
 		// unsubscribe the device to the topic
 		response, err := config.FirebaseMessaging.UnsubscribeFromTopic(ctx, []string{req.GetToken()}, req.GetTopic())
 		if err != nil {
 			return nil, status.Errorf(codes.Internal, "unable to unsubscribe from topic: %+v", err)
 		}
-		
+
 		log.Printf("unsubscribed from topic: %+v\n", response.SuccessCount)
 	}
-	
+
 	// ignore the token if topic is provided
-	return &emptypb.Empty{}, nil
+	return &pb.Empty{}, nil
 }
 
 func getChannelIdFromNotificationType(channelType pb.NotificationChannelType) string {
@@ -167,6 +165,6 @@ func getChannelIdFromNotificationType(channelType pb.NotificationChannelType) st
 		pb.NotificationChannelType_UNKNOWN:
 		channelId = "general"
 	}
-	
+
 	return channelId
 }
